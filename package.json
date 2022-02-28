@@ -35,9 +35,11 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
     "decimal.js": "^10.3.1",
     "dotenv": "^10.0.0",
+    "googleapis": "^95.0.0",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -54,6 +56,7 @@
     "nanoid-dictionary": "^4.3.0",
     "nats": "^1.4.12",
     "node-rsa": "^1.1.1",
+    "nodemailer": "^6.7.2",
     "numeral": "^2.0.6",
     "redlock": "^4.2.0",
     "shortid": "^2.2.16"

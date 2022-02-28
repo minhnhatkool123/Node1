@@ -23,6 +23,70 @@ module.exports = {
 		 * Actions
 		 */
 	actions: {
+		resetPassword: {
+			rest: {
+				method: 'POST',
+				fullPath: '/v1/External/MiniProgram/ResetPassword',
+				auth: {
+					strategies: ['Default'],
+					mode: 'try', // 'required', 'optional', 'try'
+				},
+			},
+			params: {
+				body: {
+					$$type: 'object',
+					otp: 'string',
+				},
+			},
+			handler: require('./actions/resetPassword.action'),
+		},
+		sendOtpEmail: {
+			rest: {
+				method: 'POST',
+				fullPath: '/v1/External/MiniProgram/SendOtpEmail',
+				auth: false
+			},
+			params: {
+				body: {
+					$$type: 'object',
+					email: { type: "email" },
+				},
+			},
+			handler: require('./actions/sendOtpEmail.action'),
+		},
+		login: {
+			rest: {
+				method: 'POST',
+				fullPath: '/v1/External/MiniProgram/Login',
+				auth: false
+			},
+			params: {
+				body: {
+					$$type: 'object',
+					email: { type: "email" },
+					password: 'string',
+				},
+			},
+			handler: require('./actions/login.rest.action'),
+		},
+		createAccount: {
+			rest: {
+				method: 'POST',
+				fullPath: '/v1/External/MiniProgram/CreateAccount',
+			},
+			params: {
+				body: {
+					$$type: 'object',
+					fullName: 'string',
+					phone: 'string',
+					email: { type: "email" },
+					password: 'string',
+					gender: 'string',
+					avatar: 'string',
+				},
+			},
+			handler: require('./actions/registerAccount.rest.action'),
+		},
 		createOrder: {
 			rest: {
 				method: 'POST',
