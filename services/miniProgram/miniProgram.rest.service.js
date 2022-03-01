@@ -23,13 +23,27 @@ module.exports = {
 		 * Actions
 		 */
 	actions: {
+		logout: {
+			rest: {
+				method: 'POST',
+				fullPath: '/v1/External/MiniProgram/Logout',
+				auth: false
+			},
+			params: {
+				body: {
+					$$type: 'object',
+					id: 'number',
+				},
+			},
+			handler: require('./actions/logout.rest.action'),
+		},
 		resetPassword: {
 			rest: {
 				method: 'POST',
 				fullPath: '/v1/External/MiniProgram/ResetPassword',
 				auth: {
-					strategies: ['Default'],
-					mode: 'try', // 'required', 'optional', 'try'
+					strategies: ['Test'],
+					mode: 'otp', // 'required', 'optional', 'try','otp'
 				},
 			},
 			params: {
@@ -45,6 +59,7 @@ module.exports = {
 				method: 'POST',
 				fullPath: '/v1/External/MiniProgram/SendOtpEmail',
 				auth: false
+
 			},
 			params: {
 				body: {
@@ -73,6 +88,7 @@ module.exports = {
 			rest: {
 				method: 'POST',
 				fullPath: '/v1/External/MiniProgram/CreateAccount',
+				auth: false
 			},
 			params: {
 				body: {

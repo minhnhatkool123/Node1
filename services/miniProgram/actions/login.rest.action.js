@@ -15,19 +15,15 @@ module.exports = async function (ctx) {
             password: payload.password,
         };
 
-        //console.log('vao', obj)
-
         let userInfo;
         userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
             email: obj.email
         }])
 
-        console.log('vao login')
-
         if (!userInfo) {
             return {
                 code: 1001,
-                message: 'Thất bại chưa đk tài khoản',
+                message: 'Thất bại chưa đăng ký tài khoản',
             };
         }
 
@@ -40,8 +36,12 @@ module.exports = async function (ctx) {
         }
 
         const accessToken = signJwt({ id: userInfo.id, email: userInfo.email, }, '100d')
-        const newPassword = Math.floor(Math.random() * 9000000) + 1000000;
-        console.log(ctx)
+
+        await this.broker.call('v1.MiniProgramUserModel.findOneAndUpdate', [{
+            email: obj.email
+        }, {
+            accessToken,
+        }])
 
         return {
             code: 1000,

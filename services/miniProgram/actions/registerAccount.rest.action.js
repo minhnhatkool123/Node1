@@ -17,8 +17,6 @@ module.exports = async function (ctx) {
             avatar: payload.avatar,
         };
 
-        //console.log('vao', obj)
-
         let userInfo;
         userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
             email: obj.email

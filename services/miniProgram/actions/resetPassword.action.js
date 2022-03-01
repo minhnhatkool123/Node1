@@ -14,16 +14,14 @@ module.exports = async function (ctx) {
             otp: payload.otp,
         };
 
-        //console.log('vao', obj)
+        console.log('ctxOTP', ctx.meta.auth)
+        if (!ctx.meta.auth.credentials.otp || !ctx.meta.auth.credentials.email) {
+            return {
+                code: 1001,
+                message: 'Lỗi tokenEmail',
+            };
+        }
 
-
-        // let userInfo;
-        // userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
-        //     email: obj.email
-        // }])
-
-        // console.log(ctx.meta.auth.credentials.otp)
-        // console.log(typeof obj.otp)
         if (ctx.meta.auth.credentials.otp !== obj.otp) {
             return {
                 code: 1001,
@@ -32,15 +30,9 @@ module.exports = async function (ctx) {
         }
 
 
-
-
-
-
         const newPassword = Math.floor(Math.random() * 9000000) + 1000000;
-        //console.log(newPassword)
         await emailHelper.sendEmail('nhatnpm@payme.vn', newPassword, 'New password')
         const hashPassword = await bcrypt.hash(newPassword.toString(), 10);
-
 
         await this.broker.call('v1.MiniProgramUserModel.findOneAndUpdate', [{
             email: ctx.meta.auth.credentials.email

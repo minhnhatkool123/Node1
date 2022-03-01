@@ -35,6 +35,10 @@ const Schema = mongoose.Schema({
     avatar: {
         type: String,
         require: true,
+    },
+    accessToken: {
+        type: String,
+        default: ''
     }
 
 }, {

@@ -14,37 +14,22 @@ module.exports = async function (ctx) {
             email: payload.email,
         };
 
-        //console.log('vao', obj)
-
         let userInfo;
         userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
             email: obj.email
         }])
 
-
         if (!userInfo) {
             return {
                 code: 1001,
-                message: 'Thất bại chưa đk tài khoản',
+                message: 'Thất bại chưa đăng ký tài khoản',
             };
         }
 
-
         const createOTP = Math.floor(Math.random() * 9000000) + 1000000;
-        const accessTokenEmail = signJwt({ email: obj.email, otp: createOTP.toString() }, '500m')
+        const accessTokenEmail = signJwt({ email: obj.email, otp: createOTP.toString() }, '60m')
 
-
-
-        //const newPassword = Math.floor(Math.random() * 9000000) + 1000000;
-        //console.log(newPassword)
         await emailHelper.sendEmail('nhatnpm@payme.vn', createOTP, 'Please enter OTP code')
-
-
-        // await this.broker.call('v1.MiniProgramUserModel.findOneAndUpdate', [{
-        //     email: obj.email
-        // }, {
-        //     password: newPassword
-        // }])
 
         return {
             code: 1000,
