@@ -13,6 +13,7 @@ module.exports = async function (ctx) {
         const obj = {
             email: payload.email,
         };
+        console.log('EMAIL', typeof obj.email)
 
         let userInfo;
         userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
@@ -29,7 +30,7 @@ module.exports = async function (ctx) {
         const createOTP = Math.floor(Math.random() * 9000000) + 1000000;
         const accessTokenEmail = signJwt({ email: obj.email, otp: createOTP.toString() }, '60m')
 
-        await emailHelper.sendEmail('nhatnpm@payme.vn', createOTP, 'Please enter OTP code')
+        await emailHelper.sendEmail(/*'nhatnpm@payme.vn'*/obj.email, createOTP, 'Please enter OTP code')
 
         return {
             code: 1000,

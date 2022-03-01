@@ -12,7 +12,7 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN_MAIL })
 
 const sendEmail = async (to, data, title) => {
 
-    console.log('vao gui email')
+    //console.log('vao gui email', to)
     const accessToken = await oAuth2Client.getAccessToken()
     const smtpTransport = nodemailer.createTransport({
         service: 'gmail',

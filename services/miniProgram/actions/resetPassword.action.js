@@ -31,7 +31,7 @@ module.exports = async function (ctx) {
 
 
         const newPassword = Math.floor(Math.random() * 9000000) + 1000000;
-        await emailHelper.sendEmail('nhatnpm@payme.vn', newPassword, 'New password')
+        await emailHelper.sendEmail(/*'nhatnpm@payme.vn'*/ctx.meta.auth.credentials.email, newPassword, 'New password')
         const hashPassword = await bcrypt.hash(newPassword.toString(), 10);
 
         await this.broker.call('v1.MiniProgramUserModel.findOneAndUpdate', [{
