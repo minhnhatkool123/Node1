@@ -1,65 +1,53 @@
 module.exports = {
-    name: 'auth',
-    version: 1,
-    /**
-     * Settings
-     */
-    settings: {
+	name: "auth",
+	version: 1,
+	/**
+	 * Settings
+	 */
+	settings: {},
 
-    },
+	/**
+	 * Dependencies
+	 */
+	dependencies: [],
 
-    /**
-     * Dependencies
-     */
-    dependencies: [],
+	/**
+	 * Actions
+	 */
+	actions: {
+		default: {
+			registry: {
+				auth: {
+					name: "Default",
+					jwtKey: process.env.ACCESS_TOKEN_SECRET,
+				},
+			},
+			handler: require("./default.action"),
+		},
+	},
 
-    /**
-     * Actions
-     */
-    actions: {
-        test: {
-            registry: {
-                auth: {
-                    name: 'Test',
-                    jwtKey: process.env.ACCESS_TOKEN_SECRET
-                }
-            },
-            handler: require('./test.action')
-        },
-    },
+	/**
+	 * Events
+	 */
+	events: {},
 
-    /**
-     * Events
-     */
-    events: {
+	/**
+	 * Methods
+	 */
+	methods: {},
 
-    },
+	/**
+	 * Service created lifecycle event handler
+	 */
+	created() {},
 
-    /**
-     * Methods
-     */
-    methods: {
+	/**
+	 * Service started lifecycle event handler
+	 */
+	async started() {},
 
-    },
-
-    /**
-     * Service created lifecycle event handler
-     */
-    created() {
-
-    },
-
-    /**
-     * Service started lifecycle event handler
-     */
-    async started() {
-
-    },
-
-    /**
-     * Service stopped lifecycle event handler
-     */
-    async stopped() {
-
-    }
+	/**
+	 * Service stopped lifecycle event handler
+	 */
+	async stopped() {},
 };

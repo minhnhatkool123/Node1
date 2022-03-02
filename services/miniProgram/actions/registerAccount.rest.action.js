@@ -1,87 +1,65 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
-const { MoleculerError } = require('moleculer').Errors;
-const bcrypt = require('bcrypt');
-const JsonWebToken = require('jsonwebtoken');
-const MiniProgramUserConstant = require('../constants/MiniProgramUserConstant');
+const { MoleculerError } = require("moleculer").Errors;
+const bcrypt = require("bcrypt");
+const JsonWebToken = require("jsonwebtoken");
+const MiniProgramUserConstant = require("../constants/MiniProgramUserConstant");
 
 module.exports = async function (ctx) {
-    try {
-        const payload = ctx.params.body;
-        const obj = {
-            name: payload.fullName,
-            phone: payload.phone,
-            email: payload.email,
-            password: payload.password,
-            gender: payload.gender,
-            avatar: payload.avatar,
-        };
+	try {
+		const payload = ctx.params.body;
+		const obj = {
+			name: payload.fullName,
+			phone: payload.phone,
+			email: payload.email,
+			password: payload.password,
+			gender: payload.gender,
+			avatar: payload.avatar,
+		};
 
-        let userInfo;
-        userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
-            email: obj.email
-        }])
+		let userInfo = await this.broker.call(
+			"v1.MiniProgramUserModel.findOne",
+			[
+				{ $or: [{ email: obj.email }, { phone: obj.phone }] },
+				"-_id phone email",
+			]
+		);
 
-        if (userInfo) {
-            return {
-                code: 1001,
-                message: 'Thất bại trùng email',
-            };
-        }
+		console.log(userInfo);
+		if (userInfo?.email === obj.email) {
+			return {
+				code: 1001,
+				message: "Thất bại trùng email",
+			};
+		}
 
-        userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
-            phone: obj.phone
-        }])
+		if (userInfo?.phone === obj.phone) {
+			return {
+				code: 1001,
+				message: "Thất bại trùng sđt",
+			};
+		}
 
-        if (userInfo) {
-            return {
-                code: 1001,
-                message: 'Thất bại trùng sđt',
-            };
-        }
+		const hashPassword = await bcrypt.hash(obj.password, 10);
+		obj.password = hashPassword;
+		let miniProgramCreate = await this.broker.call(
+			"v1.MiniProgramUserModel.create",
+			[obj]
+		);
 
+		if (_.get(miniProgramCreate, "id", null) === null) {
+			return {
+				code: 1001,
+				message: "Thất bại",
+			};
+		}
 
-        //console.log(obj.password)
-        const hashPassword = await bcrypt.hash(obj.password, 10);
-        obj.password = hashPassword
-        let miniProgramCreate;
-        miniProgramCreate = await this.broker.call('v1.MiniProgramUserModel.create', [obj]);
-
-        if (_.get(miniProgramCreate, 'id', null) === null) {
-            return {
-                code: 1001,
-                message: 'Thất bại',
-            };
-        }
-
-        // const miniProgramTokenInfo = {
-        //     id: miniProgramCreate.id,
-        //     scope: miniProgramCreate.scope,
-        //     miniProgramId: miniProgramCreate.miniProgramId,
-        // };
-
-        // const miniProgramToken = JsonWebToken.sign(miniProgramTokenInfo, process.env.MINIPROGRAM_JWT_SECRETKEY);
-        // miniProgramCreate = await this.broker.call('v1.MiniProgramInfoModel.findOneAndUpdate', [
-        //     {
-        //         id: miniProgramCreate.id,
-        //     },
-        //     {
-        //         miniProgramToken,
-        //     }]);
-
-        // if (_.get(miniProgramCreate, 'id', null) === null) {
-        //     return {
-        //         code: 1001,
-        //         message: 'Thất bại',
-        //     };
-        // }
-
-        return {
-            code: 1000,
-            message: 'Tạo tài khoản thành công',
-        };
-    } catch (err) {
-        if (err.name === 'MoleculerError') throw err;
-        throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
-    }
+		return {
+			code: 1000,
+			message: "Tạo tài khoản thành công",
+		};
+	} catch (err) {
+		if (err.name === "MoleculerError") throw err;
+		throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
+	}
 };

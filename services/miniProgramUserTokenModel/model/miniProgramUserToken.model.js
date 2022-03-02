@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const autoIncrement = require("mongoose-auto-increment");
-const miniProgramUserConstant = require("../constants/MiniProgramUserConstant");
+const Moment = require("moment");
+const miniProgramUserTokenConstant = require("../constants/MiniProgramUserTokenConstant");
 
 autoIncrement.initialize(mongoose);
 
@@ -11,38 +12,37 @@ const Schema = mongoose.Schema(
 			required: true,
 			unique: true,
 		},
-		name: {
-			type: String,
+		expiredTime: {
+			type: Date,
+			default: Moment(new Date()).add(30, "minutes"),
+		},
+		userId: {
+			type: Number,
 			require: true,
 		},
-		password: {
+		logoutTime: {
+			type: Date,
+			default: null,
+		},
+		platform: {
+			type: String,
+			default: null,
+		},
+		deviceId: {
+			type: Number,
+			default: null,
+		},
+		status: {
 			type: String,
 			require: true,
-		},
-		phone: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		gender: {
-			type: String,
 			enum: [
-				miniProgramUserConstant.GENDER.MALE,
-				miniProgramUserConstant.GENDER.FEMALE,
+				miniProgramUserTokenConstant.STATUS.ACTIVE,
+				miniProgramUserTokenConstant.STATUS.DEACTIVE,
 			],
-		},
-		avatar: {
-			type: String,
-			require: true,
 		},
 	},
 	{
-		collection: "Service_MiniProgramUser",
+		collection: "Service_MiniProgramUserToken",
 		versionKey: false,
 		timestamps: true,
 	}

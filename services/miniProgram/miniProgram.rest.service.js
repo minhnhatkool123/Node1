@@ -1,17 +1,16 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
-const MeAPI = require('../../serviceDependencies/MEAPI');
+const MeAPI = require("../../serviceDependencies/MEAPI");
 
 module.exports = {
-	name: 'MiniProgram.rest',
+	name: "MiniProgram.rest",
 
 	version: 1,
 
 	/**
 	 * Settings
 	 */
-	settings: {
-	},
+	settings: {},
 
 	/**
 	 * Dependencies
@@ -19,128 +18,127 @@ module.exports = {
 	dependencies: [],
 
 	/**
-		 * Actions
-		 */
+	 * Actions
+	 */
 	actions: {
 		logout: {
 			rest: {
-				method: 'POST',
-				fullPath: '/v1/External/MiniProgram/Logout',
-				auth: false
+				method: "POST",
+				fullPath: "/v1/External/MiniProgram/Logout",
+				auth: false,
 			},
 			params: {
 				body: {
-					$$type: 'object',
-					id: 'number',
+					$$type: "object",
+					id: "number",
 				},
 			},
-			handler: require('./actions/logout.rest.action'),
+			handler: require("./actions/logout.rest.action"),
 		},
 		resetPassword: {
 			rest: {
-				method: 'POST',
-				fullPath: '/v1/External/MiniProgram/ResetPassword',
+				method: "POST",
+				fullPath: "/v1/External/MiniProgram/ResetPassword",
 				auth: {
-					strategies: ['Test'],
-					mode: 'otp', // 'required', 'optional', 'try','otp'
+					strategies: ["Test"],
+					mode: "otp", // 'required', 'optional', 'try','otp'
 				},
 			},
 			params: {
 				body: {
-					$$type: 'object',
-					otp: 'string',
+					$$type: "object",
+					otp: "string",
 				},
 			},
-			handler: require('./actions/resetPassword.action'),
+			handler: require("./actions/resetPassword.action"),
 		},
 		sendOtpEmail: {
 			rest: {
-				method: 'POST',
-				fullPath: '/v1/External/MiniProgram/SendOtpEmail',
-				auth: false
-
+				method: "POST",
+				fullPath: "/v1/External/MiniProgram/SendOtpEmail",
+				auth: false,
 			},
 			params: {
 				body: {
-					$$type: 'object',
+					$$type: "object",
 					email: { type: "email" },
 				},
 			},
-			handler: require('./actions/sendOtpEmail.action'),
+			handler: require("./actions/sendOtpEmail.action"),
 		},
 		login: {
 			rest: {
-				method: 'POST',
-				fullPath: '/v1/External/MiniProgram/Login',
-				auth: false
+				method: "POST",
+				fullPath: "/v1/External/MiniProgram/Login",
+				auth: false,
 			},
 			params: {
 				body: {
-					$$type: 'object',
+					$$type: "object",
 					email: { type: "email" },
-					password: 'string',
+					password: "string",
 				},
 			},
-			handler: require('./actions/login.rest.action'),
+			handler: require("./actions/login.rest.action"),
 		},
 		createAccount: {
 			rest: {
-				method: 'POST',
-				fullPath: '/v1/External/MiniProgram/CreateAccount',
-				auth: false
+				method: "POST",
+				fullPath: "/v1/External/MiniProgram/CreateAccount",
+				auth: false,
 			},
 			params: {
 				body: {
-					$$type: 'object',
-					fullName: 'string',
-					phone: 'string',
+					$$type: "object",
+					fullName: "string",
+					phone: "string",
 					email: { type: "email" },
-					password: 'string',
-					gender: 'string',
-					avatar: 'string',
+					password: "string",
+					gender: "string",
+					avatar: "string",
 				},
 			},
-			handler: require('./actions/registerAccount.rest.action'),
+			handler: require("./actions/registerAccount.rest.action"),
 		},
 	},
 
 	/**
- * Events
- */
-	events: {
-
-	},
+	 * Events
+	 */
+	events: {},
 
 	/**
-* Methods
-*/
+	 * Methods
+	 */
 	methods: {
+		checkPhone: require("./methods/checkPhone.method"),
 	},
 
 	/**
-* Service created lifecycle event handler
-*/
-	created() {
-
-	},
+	 * Service created lifecycle event handler
+	 */
+	created() {},
 
 	/**
-* Service started lifecycle event handler
-*/
+	 * Service started lifecycle event handler
+	 */
 	async started() {
 		const url = process.env.FE_URL;
-		const isSecurity = process.env.FE_SECURITY === 'true';
+		const isSecurity = process.env.FE_SECURITY === "true";
 		const privateKey = process.env.FE_PRIVATEKEY;
 		const publicKey = process.env.FE_PUBLICKEY;
 
 		this.historyService = new MeAPI({
-			url, publicKey, privateKey, isSecurity, 'x-api-client': 'app',
+			url,
+			publicKey,
+			privateKey,
+			isSecurity,
+			"x-api-client": "app",
 		});
 	},
 
 	/**
-* Service stopped lifecycle event handler
-*/
-	async stopped() {
-	},
+	 * Service stopped lifecycle event handler
+	 */
+	async stopped() {},
 };

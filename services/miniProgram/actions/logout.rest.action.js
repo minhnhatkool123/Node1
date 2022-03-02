@@ -1,27 +1,42 @@
-const _ = require('lodash');
-
-const { MoleculerError } = require('moleculer').Errors;
+const _ = require("lodash");
+const Moment = require("moment");
+const { MoleculerError } = require("moleculer").Errors;
+const miniProgramUserTokenConstant = require("../constants/MiniProgramUserTokenConstant");
 
 module.exports = async function (ctx) {
-    try {
-        const payload = ctx.params.body;
-        const obj = {
-            id: payload.id,
-        };
+	try {
+		const payload = ctx.params.body;
+		const obj = {
+			id: payload.id,
+		};
 
-        let userInfo;
-        userInfo = await this.broker.call('v1.MiniProgramUserModel.findOneAndUpdate', [{
-            id: obj.id
-        }, {
-            accessToken: ""
-        }])
+		console.log(obj.id);
+		let accessTokenInfo = await this.broker.call(
+			"v1.MiniProgramUserTokenModel.findOneAndUpdate",
+			[
+				{
+					userId: obj.id,
+				},
+				{
+					status: miniProgramUserTokenConstant.STATUS.DEACTIVE,
+					logoutTime: Moment(new Date()),
+				},
+			]
+		);
 
-        return {
-            code: 1000,
-            message: 'Đăng xuất thành công',
-        };
-    } catch (err) {
-        if (err.name === 'MoleculerError') throw err;
-        throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
-    }
+		if (_.get(accessTokenInfo, "id", null) === null) {
+			return {
+				code: 1001,
+				message: "Thất bại",
+			};
+		}
+
+		return {
+			code: 1000,
+			message: "Đăng xuất thành công",
+		};
+	} catch (err) {
+		if (err.name === "MoleculerError") throw err;
+		throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
+	}
 };
