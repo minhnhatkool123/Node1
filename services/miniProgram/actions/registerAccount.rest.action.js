@@ -2,8 +2,6 @@ const _ = require("lodash");
 
 const { MoleculerError } = require("moleculer").Errors;
 const bcrypt = require("bcrypt");
-const JsonWebToken = require("jsonwebtoken");
-const MiniProgramUserConstant = require("../constants/MiniProgramUserConstant");
 
 module.exports = async function (ctx) {
 	try {
@@ -26,19 +24,26 @@ module.exports = async function (ctx) {
 		);
 
 		console.log(userInfo);
-		if (userInfo?.email === obj.email) {
+		if (_.get(userInfo, "email", null) === obj.email) {
 			return {
 				code: 1001,
 				message: "Thất bại trùng email",
 			};
 		}
 
-		if (userInfo?.phone === obj.phone) {
+		if (_.get(userInfo, "phone", null) === obj.phone) {
 			return {
 				code: 1001,
-				message: "Thất bại trùng sđt",
+				message: "Thất bại trung sđt",
 			};
 		}
+
+		// if (userInfo.phone === obj.phone) {
+		// 	return {
+		// 		code: 1001,
+		// 		message: "Thất bại trùng sđt",
+		// 	};
+		// }
 
 		const hashPassword = await bcrypt.hash(obj.password, 10);
 		obj.password = hashPassword;

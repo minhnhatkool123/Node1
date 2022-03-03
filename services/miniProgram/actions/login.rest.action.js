@@ -1,5 +1,4 @@
 const _ = require("lodash");
-
 const { MoleculerError } = require("moleculer").Errors;
 const bcrypt = require("bcrypt");
 const signJwt = require("../../helpers/signJwt.helper");
@@ -27,10 +26,10 @@ module.exports = async function (ctx) {
 			]
 		);
 
-		if (!userInfo) {
+		if (_.get(userInfo, "id", null) === null) {
 			return {
 				code: 1001,
-				message: "Thất bại chưa đăng ký tài khoản",
+				message: "Thất bại sai tài khoản hoặc mật khẩu",
 			};
 		}
 
@@ -90,15 +89,6 @@ module.exports = async function (ctx) {
 				message: "Thất bại",
 			};
 		}
-
-		// await this.broker.call("v1.MiniProgramUserModel.findOneAndUpdate", [
-		// 	{
-		// 		email: obj.email,
-		// 	},
-		// 	{
-		// 		accessToken,
-		// 	},
-		// ]);
 
 		return {
 			code: 1000,

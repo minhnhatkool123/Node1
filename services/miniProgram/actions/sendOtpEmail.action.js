@@ -1,44 +1,66 @@
-const _ = require('lodash');
-
-const { MoleculerError } = require('moleculer').Errors;
-const bcrypt = require('bcrypt');
-const JsonWebToken = require('jsonwebtoken');
-const MiniProgramUserConstant = require('../constants/MiniProgramUserConstant');
-const signJwt = require('../../helpers/signJwt.helper')
-const emailHelper = require('../../helpers/email.helper')
+const _ = require("lodash");
+const Moment = require("moment");
+const { MoleculerError } = require("moleculer").Errors;
+const emailHelper = require("../../helpers/email.helper");
 
 module.exports = async function (ctx) {
-    try {
-        const payload = ctx.params.body;
-        const obj = {
-            email: payload.email,
-        };
-        console.log('EMAIL', typeof obj.email)
+	try {
+		const payload = ctx.params.body;
+		const obj = {
+			email: payload.email,
+		};
 
-        let userInfo;
-        userInfo = await this.broker.call('v1.MiniProgramUserModel.findOne', [{
-            email: obj.email
-        }])
+		let userInfo = await this.broker.call(
+			"v1.MiniProgramUserModel.findOne",
+			[
+				{
+					email: obj.email,
+				},
+			]
+		);
 
-        if (!userInfo) {
-            return {
-                code: 1001,
-                message: 'Thất bại chưa đăng ký tài khoản',
-            };
-        }
+		if (!userInfo) {
+			return {
+				code: 1001,
+				message: "Thất bại chưa đăng ký tài khoản",
+			};
+		}
 
-        const createOTP = Math.floor(Math.random() * 9000000) + 1000000;
-        const accessTokenEmail = signJwt({ email: obj.email, otp: createOTP.toString() }, '60m')
+		let randomOTP = Math.floor(Math.random() * 9000000) + 1000000;
+		const [createOTP] = await Promise.all([
+			this.broker.call("v1.MiniProgramOtpModel.create", [
+				{
+					email: userInfo.email,
+					code: randomOTP.toString(),
+					expiredTime: Moment(new Date()).add(15, "minutes"),
+				},
+			]),
+			emailHelper.sendEmail(
+				/*'nhatnpm@payme.vn'*/ obj.email,
+				randomOTP,
+				"Please enter OTP code"
+			),
+		]);
 
-        await emailHelper.sendEmail(/*'nhatnpm@payme.vn'*/obj.email, createOTP, 'Please enter OTP code')
+		console.log("created OTP", createOTP);
+		if (_.get(createOTP, "id", null) === null) {
+			return {
+				code: 1001,
+				message: "Tạo otp thất bại",
+			};
+		}
+		// await emailHelper.sendEmail(
+		// 	/*'nhatnpm@payme.vn'*/ obj.email,
+		// 	randomOTP,
+		// 	"Please enter OTP code"
+		// );
 
-        return {
-            code: 1000,
-            message: 'Gửi email thành công vui lòng kiểm tra email',
-            accessTokenEmail
-        };
-    } catch (err) {
-        if (err.name === 'MoleculerError') throw err;
-        throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
-    }
+		return {
+			code: 1000,
+			message: "Gửi email thành công vui lòng kiểm tra email",
+		};
+	} catch (err) {
+		if (err.name === "MoleculerError") throw err;
+		throw new MoleculerError(`[MiniProgram] Add: ${err.message}`);
+	}
 };

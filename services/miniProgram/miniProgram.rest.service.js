@@ -39,15 +39,13 @@ module.exports = {
 			rest: {
 				method: "POST",
 				fullPath: "/v1/External/MiniProgram/ResetPassword",
-				auth: {
-					strategies: ["Test"],
-					mode: "otp", // 'required', 'optional', 'try','otp'
-				},
+				auth: false,
 			},
 			params: {
 				body: {
 					$$type: "object",
 					otp: "string",
+					email: { type: "email" },
 				},
 			},
 			handler: require("./actions/resetPassword.action"),

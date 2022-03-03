@@ -23,7 +23,7 @@ module.exports = async function (ctx) {
 			);
 		}
 
-		if (moment(accessToken.expiredAt).isBefore(new Date())) {
+		if (moment(accessToken.expiredTime).isBefore(new Date())) {
 			throw new MoleculerError(
 				"Phiên đăng nhập đã hết hạn!",
 				401,
@@ -67,14 +67,6 @@ module.exports = async function (ctx) {
 		// 	"v1.MiniProgramUserModel.findOne",
 		// 	[{ id: authInfo.id }]
 		// );
-		// if (moment(accessToken.expiredAt).isBefore(new Date())) {
-		// 	console.log("Authen false 2 :", accessToken);
-		// 	throw new MoleculerError(
-		// 		"Phiên đăng nhập đã hết hạn!",
-		// 		401,
-		// 		null,
-		// 		null
-		// 	);
 		// }
 		// if (!userInfo.accessToken) {
 		// 	throw new MoleculerError(
