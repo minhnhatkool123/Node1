@@ -19,7 +19,10 @@ module.exports = async function (ctx) {
 				},
 				{
 					status: miniProgramUserTokenConstant.STATUS.DEACTIVE,
-					logoutTime: Moment(new Date()),
+					$push: {
+						logoutTime: Moment(new Date()),
+					},
+					//logoutTime: Moment(new Date()),
 				},
 			]
 		);

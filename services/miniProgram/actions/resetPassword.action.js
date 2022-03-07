@@ -12,6 +12,7 @@ module.exports = async function (ctx) {
 			email: payload.email,
 		};
 
+		console.log("aaaaaa", obj.otp);
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
 			[
@@ -31,6 +32,7 @@ module.exports = async function (ctx) {
 		let otpInfo = await this.broker.call("v1.MiniProgramOtpModel.findOne", [
 			{
 				email: userInfo.email,
+				code: obj.otp,
 			},
 		]);
 
@@ -41,12 +43,12 @@ module.exports = async function (ctx) {
 			};
 		}
 
-		if (otpInfo.code !== obj.otp) {
-			return {
-				code: 1001,
-				message: "Sai mã otp",
-			};
-		}
+		// if (otpInfo.code !== obj.otp) {
+		// 	return {
+		// 		code: 1001,
+		// 		message: "Sai mã otp",
+		// 	};
+		// }
 
 		if (Moment(otpInfo.expiredTime).isBefore(new Date())) {
 			return {

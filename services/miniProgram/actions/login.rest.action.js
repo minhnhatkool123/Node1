@@ -66,6 +66,9 @@ module.exports = async function (ctx) {
 					{
 						status: miniProgramUserTokenConstant.STATUS.ACTIVE,
 						expiredTime: Moment(new Date()).add(30, "minutes"),
+						$push: {
+							loginTime: Moment(new Date()),
+						},
 					},
 				]
 			);
@@ -78,6 +81,7 @@ module.exports = async function (ctx) {
 						userId: userInfo.id,
 						status: miniProgramUserTokenConstant.STATUS.ACTIVE,
 						expiredTime: Moment(new Date()).add(30, "minutes"),
+						loginTime: Moment(new Date()),
 					},
 				]
 			);

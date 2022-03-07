@@ -21,8 +21,12 @@ const Schema = mongoose.Schema(
 			require: true,
 		},
 		logoutTime: {
-			type: Date,
-			default: null,
+			type: [Date],
+			default: [],
+		},
+		loginTime: {
+			type: [Date],
+			required: true,
 		},
 		platform: {
 			type: String,

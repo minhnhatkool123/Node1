@@ -27,33 +27,30 @@ module.exports = async function (ctx) {
 		}
 
 		let randomOTP = Math.floor(Math.random() * 9000000) + 1000000;
-		const [createOTP] = await Promise.all([
-			this.broker.call("v1.MiniProgramOtpModel.create", [
+		const createOTP = await this.broker.call(
+			"v1.MiniProgramOtpModel.create",
+			[
 				{
 					email: userInfo.email,
 					code: randomOTP.toString(),
 					expiredTime: Moment(new Date()).add(15, "minutes"),
 				},
-			]),
-			emailHelper.sendEmail(
-				/*'nhatnpm@payme.vn'*/ obj.email,
-				randomOTP,
-				"Please enter OTP code"
-			),
-		]);
+			]
+		);
 
-		console.log("created OTP", createOTP);
 		if (_.get(createOTP, "id", null) === null) {
 			return {
 				code: 1001,
 				message: "Tạo otp thất bại",
 			};
 		}
-		// await emailHelper.sendEmail(
-		// 	/*'nhatnpm@payme.vn'*/ obj.email,
-		// 	randomOTP,
-		// 	"Please enter OTP code"
-		// );
+
+		await emailHelper.sendEmail(
+			obj.email,
+			randomOTP,
+			"Please enter OTP code"
+		),
+			console.log("created OTP", createOTP);
 
 		return {
 			code: 1000,
