@@ -21,11 +21,13 @@ const Schema = mongoose.Schema(
 			require: true,
 		},
 		logoutTime: {
-			type: [Date],
-			default: [],
+			// type: [Date],
+			// default: [],
+			type: Date,
+			default: null,
 		},
 		loginTime: {
-			type: [Date],
+			type: Date,
 			required: true,
 		},
 		platform: {

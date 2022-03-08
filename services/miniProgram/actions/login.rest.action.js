@@ -29,7 +29,7 @@ module.exports = async function (ctx) {
 		if (_.get(userInfo, "id", null) === null) {
 			return {
 				code: 1001,
-				message: "Thất bại sai tài khoản hoặc mật khẩu",
+				message: "Thất bại chưa đăng ký tài khoản",
 			};
 		}
 
@@ -45,54 +45,29 @@ module.exports = async function (ctx) {
 		}
 
 		let accessTokenInfo = await this.broker.call(
-			"v1.MiniProgramUserTokenModel.findOne",
+			"v1.MiniProgramUserTokenModel.create",
 			[
 				{
 					userId: userInfo.id,
+					status: miniProgramUserTokenConstant.STATUS.ACTIVE,
+					expiredTime: Moment(new Date()).add(30, "minutes"),
+					loginTime: Moment(new Date()),
 				},
 			]
 		);
 
-		const accessToken = signJwt({ id: userInfo.id }, "30m");
-		let createAccessToken = null;
-		if (accessTokenInfo) {
-			console.log("có lưu token rồi");
-			createAccessToken = await this.broker.call(
-				"v1.MiniProgramUserTokenModel.findOneAndUpdate",
-				[
-					{
-						userId: userInfo.id,
-					},
-					{
-						status: miniProgramUserTokenConstant.STATUS.ACTIVE,
-						expiredTime: Moment(new Date()).add(30, "minutes"),
-						$push: {
-							loginTime: Moment(new Date()),
-						},
-					},
-				]
-			);
-		} else {
-			console.log("chưa lưu token");
-			createAccessToken = await this.broker.call(
-				"v1.MiniProgramUserTokenModel.create",
-				[
-					{
-						userId: userInfo.id,
-						status: miniProgramUserTokenConstant.STATUS.ACTIVE,
-						expiredTime: Moment(new Date()).add(30, "minutes"),
-						loginTime: Moment(new Date()),
-					},
-				]
-			);
-		}
-
-		if (_.get(createAccessToken, "id", null) === null) {
+		if (_.get(accessTokenInfo, "id", null) === null) {
 			return {
 				code: 1001,
 				message: "Thất bại",
 			};
 		}
+
+		console.log("accessTokenInfo", accessTokenInfo.id);
+		const accessToken = signJwt(
+			{ userId: userInfo.id, tokenId: accessTokenInfo.id },
+			"30m"
+		);
 
 		return {
 			code: 1000,

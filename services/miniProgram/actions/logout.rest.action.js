@@ -5,24 +5,43 @@ const miniProgramUserTokenConstant = require("../constants/MiniProgramUserTokenC
 
 module.exports = async function (ctx) {
 	try {
+		if (_.get(ctx, "meta.auth.credentials.userId", null) === null) {
+			return {
+				code: 1001,
+				message: "Không tồn tại userId",
+			};
+		}
+
+		if (_.get(ctx, "meta.auth.credentials.tokenId", null) === null) {
+			return {
+				code: 1001,
+				message: "Không tồn tại tokenId",
+			};
+		}
+
 		const payload = ctx.params.body;
 		const obj = {
 			id: payload.id,
 		};
 
-		console.log(obj.id);
+		if (parseInt(obj.id) !== ctx.meta.auth.credentials.userId) {
+			return {
+				code: 1001,
+				message: "Thông tin không hợp lệ",
+			};
+		}
+
+		console.log(ctx.meta.auth.credentials.userId);
 		let accessTokenInfo = await this.broker.call(
 			"v1.MiniProgramUserTokenModel.findOneAndUpdate",
 			[
 				{
-					userId: obj.id,
+					userId: ctx.meta.auth.credentials.userId,
+					id: ctx.meta.auth.credentials.tokenId,
 				},
 				{
 					status: miniProgramUserTokenConstant.STATUS.DEACTIVE,
-					$push: {
-						logoutTime: Moment(new Date()),
-					},
-					//logoutTime: Moment(new Date()),
+					logoutTime: Moment(new Date()),
 				},
 			]
 		);

@@ -33,7 +33,10 @@ module.exports = {
 			rest: {
 				method: "POST",
 				fullPath: "/v1/External/MiniProgram/Logout",
-				auth: false,
+				auth: {
+					strategies: ["Default"],
+					mode: "required", // 'required', 'optional', 'try'
+				},
 			},
 			params: {
 				body: {
@@ -41,6 +44,7 @@ module.exports = {
 					id: "number",
 				},
 			},
+
 			handler: require("./actions/logout.rest.action"),
 		},
 		resetPassword: {
@@ -77,6 +81,7 @@ module.exports = {
 				method: "POST",
 				fullPath: "/v1/External/MiniProgram/Login",
 				auth: false,
+				security: true,
 			},
 			params: {
 				body: {

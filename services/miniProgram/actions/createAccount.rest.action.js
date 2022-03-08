@@ -17,10 +17,7 @@ module.exports = async function (ctx) {
 
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
-			[
-				{ $or: [{ email: obj.email }, { phone: obj.phone }] },
-				"-_id phone email",
-			]
+			[{ $or: [{ email: obj.email }, { phone: obj.phone }] }]
 		);
 
 		console.log(userInfo);

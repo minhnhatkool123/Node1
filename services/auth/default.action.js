@@ -9,9 +9,18 @@ module.exports = async function (ctx) {
 		const authInfo = ctx.params;
 		console.log("authInFo", authInfo);
 
+		if (_.isEmpty(authInfo)) {
+			throw new MoleculerError(
+				"Thông tin xác thực không hợp lệ",
+				401,
+				null,
+				null
+			);
+		}
+
 		const accessToken = await this.broker.call(
 			"v1.MiniProgramUserTokenModel.findOne",
-			[{ userId: authInfo.id }]
+			[{ id: authInfo.tokenId, userId: authInfo.userId }]
 		);
 
 		if (_.get(accessToken, "id", null) === null) {
@@ -46,6 +55,7 @@ module.exports = async function (ctx) {
 			"v1.MiniProgramUserModel.findOne",
 			[{ id: userId }, "-password"]
 		);
+
 		if (_.get(userInfo, "id", false) === false) {
 			throw new MoleculerError(
 				"Tài khoản không tồn tại!",
@@ -55,35 +65,6 @@ module.exports = async function (ctx) {
 			);
 		}
 
-		// if (_.isEmpty(authInfo)) {
-		// 	throw new MoleculerError(
-		// 		"Thông tin xác thực không hợp lệ",
-		// 		401,
-		// 		null,
-		// 		null
-		// 	);
-		// }
-		// const userInfo = await this.broker.call(
-		// 	"v1.MiniProgramUserModel.findOne",
-		// 	[{ id: authInfo.id }]
-		// );
-		// }
-		// if (!userInfo.accessToken) {
-		// 	throw new MoleculerError(
-		// 		"Bạn đã đăng xuất vui lòng đăng nhập lại",
-		// 		401,
-		// 		null,
-		// 		null
-		// 	);
-		// }
-		// if (_.get(userInfo, "id", null) === null) {
-		// 	throw new MoleculerError(
-		// 		"Thông tin xác thực không hợp lệ",
-		// 		401,
-		// 		null,
-		// 		null
-		// 	);
-		// }
 		return userInfo;
 	} catch (e) {
 		throw new MoleculerError(e.message, 401, null, null);
