@@ -26,10 +26,10 @@ const Schema = mongoose.Schema(
 			type: Date,
 			default: null,
 		},
-		loginTime: {
-			type: Date,
-			required: true,
-		},
+		// loginTime: {
+		// 	type: Date,
+		// 	required: true,
+		// },
 		platform: {
 			type: String,
 			default: null,
