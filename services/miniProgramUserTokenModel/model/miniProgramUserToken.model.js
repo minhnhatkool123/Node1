@@ -48,7 +48,7 @@ const Schema = mongoose.Schema(
 		},
 	},
 	{
-		collection: "Service_MiniProgramUserToken",
+		collection: "UserToken",
 		versionKey: false,
 		timestamps: true,
 	}

@@ -25,7 +25,7 @@ const Schema = mongoose.Schema(
 		},
 	},
 	{
-		collection: "Service_MiniProgramOtp",
+		collection: "Otp",
 		versionKey: false,
 		timestamps: true,
 	}
