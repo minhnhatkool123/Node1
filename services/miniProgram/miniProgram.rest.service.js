@@ -21,14 +21,6 @@ module.exports = {
 	 * Actions
 	 */
 	actions: {
-		countLoginLogout: {
-			rest: {
-				method: "GET",
-				fullPath: "/v1/External/MiniProgram/CountLoginLogout/:month",
-				auth: false,
-			},
-			handler: require("./actions/countLoginLogout.action"),
-		},
 		logout: {
 			rest: {
 				method: "POST",
@@ -107,6 +99,7 @@ module.exports = {
 					password: "string",
 					gender: "string",
 					avatar: "string",
+					isAdmin: "boolean|optional",
 				},
 			},
 			handler: require("./actions/createAccount.rest.action"),

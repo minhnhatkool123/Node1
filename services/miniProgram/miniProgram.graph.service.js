@@ -14,7 +14,7 @@ module.exports = {
 			input: require("./graphql/input"),
 			enum: require("./graphql/enum"),
 			resolvers: {
-				MutationNode1: {
+				MutationUser: {
 					login: {
 						action: "v1.MiniProgram.graph.login",
 					},
@@ -54,6 +54,7 @@ module.exports = {
 					password: "string",
 					gender: "string",
 					avatar: "string",
+					isAdmin: "boolean|optional",
 				},
 			},
 			handler: require("./actions/createAccount.graph.action"),
@@ -96,10 +97,10 @@ module.exports = {
 			},
 			handler: require("./actions/resetPassword.graph.action"),
 		},
-		graphqlNode1: {
+		graphqlUser: {
 			graphql: {
-				query: "QueryNodeUser: String",
-				mutation: "MutationNode1: MutationNode1",
+				query: "QueryUser: String",
+				mutation: "MutationUser: MutationUser",
 			},
 			handler(ctx) {
 				return true;

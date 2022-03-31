@@ -56,7 +56,13 @@ module.exports = async function (ctx) {
 
 		console.log("accessTokenInfo", accessTokenInfo.id);
 		const accessToken = signJwt(
-			{ userId: userInfo.id, tokenId: accessTokenInfo.id },
+			{
+				userId: userInfo.id,
+				tokenId: accessTokenInfo.id,
+			},
+			userInfo.scope.includes("admin.view.stat")
+				? process.env.SECRET_KEY_ADMIN
+				: process.env.ACCESS_TOKEN_SECRET,
 			"30m"
 		);
 

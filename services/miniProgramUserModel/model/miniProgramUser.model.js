@@ -40,6 +40,10 @@ const Schema = mongoose.Schema(
 			type: String,
 			require: true,
 		},
+		scope: {
+			type: [String],
+			default: [],
+		},
 	},
 	{
 		collection: "User",

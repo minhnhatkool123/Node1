@@ -2,26 +2,18 @@ const _ = require("lodash");
 const { MoleculerError } = require("moleculer").Errors;
 const bcrypt = require("bcrypt");
 const signJwt = require("../../helpers/signJwt.helper");
-const Moment = require("moment");
 const miniProgramUserTokenConstant = require("../constants/MiniProgramUserTokenConstant");
+const Moment = require("moment");
 
 module.exports = async function (ctx) {
 	try {
-		const payload = ctx.params.body;
-		const obj = {
-			email: payload.email,
-			password: payload.password,
-		};
-
-		//this.checkPhone();
-		// const Client = this.broker.cacher.client;
-		// Client.set("hellocl", "ASDF");
+		const { email, password } = ctx.params.body;
 
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
 			[
 				{
-					email: obj.email,
+					email,
 				},
 			]
 		);
@@ -34,7 +26,7 @@ module.exports = async function (ctx) {
 		}
 
 		const isMatchPassword = await bcrypt.compare(
-			obj.password,
+			password,
 			userInfo.password
 		);
 		if (!isMatchPassword) {
@@ -51,7 +43,6 @@ module.exports = async function (ctx) {
 					userId: userInfo.id,
 					status: miniProgramUserTokenConstant.STATUS.ACTIVE,
 					expiredTime: Moment(new Date()).add(30, "minutes"),
-					//loginTime: Moment(new Date()),
 				},
 			]
 		);
@@ -65,7 +56,13 @@ module.exports = async function (ctx) {
 
 		console.log("accessTokenInfo", accessTokenInfo.id);
 		const accessToken = signJwt(
-			{ userId: userInfo.id, tokenId: accessTokenInfo.id },
+			{
+				userId: userInfo.id,
+				tokenId: accessTokenInfo.id,
+			},
+			userInfo.scope.includes("admin.view.stat")
+				? process.env.SECRET_KEY_ADMIN
+				: process.env.ACCESS_TOKEN_SECRET,
 			"30m"
 		);
 

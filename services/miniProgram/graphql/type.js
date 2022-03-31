@@ -1,12 +1,12 @@
 const gql = require("moleculer-apollo-server").moleculerGql;
 
 module.exports = gql`
-	type MutationNode1 {
-		login(input: LoginInfo!): LoginMessageResponse!
-		createAccount(input: NewUser!): MessageResponse!
-		logout(input: LogoutInfo!): MessageResponse!
-		sendOtpEmail(input: SendOtpEmailInfo!): MessageResponse!
-		resetPassword(input: ResetPasswordInfo!): MessageResponse!
+	type MutationUser {
+		login(input: LoginInput!): LoginMessageResponse!
+		createAccount(input: NewUserInput!): MessageResponse!
+		logout(input: LogoutInput!): MessageResponse!
+		sendOtpEmail(input: SendOtpEmailInput!): MessageResponse!
+		resetPassword(input: ResetPasswordInput!): MessageResponse!
 	}
 
 	type QueryNodeUser {

@@ -1,71 +1,66 @@
-const mongoose = require('mongoose');
-const DbService = require('moleculer-db');
-const MongooseAdapter = require('moleculer-db-adapter-mongoose');
-const MongooseAction = require('moleculer-db-adapter-mongoose-action');
-const MiniProgramUserModel = require('./model/miniProgramUser.model');
+const mongoose = require("mongoose");
+const DbService = require("moleculer-db");
+const MongooseAdapter = require("moleculer-db-adapter-mongoose");
+const MongooseAction = require("moleculer-db-adapter-mongoose-action");
+const MiniProgramUserModel = require("./model/miniProgramUser.model");
 
 module.exports = {
-    name: 'MiniProgramUserModel',
+	name: "MiniProgramUserModel",
 
-    version: 1,
+	version: 1,
 
-    mixins: [DbService],
+	mixins: [DbService],
 
-    adapter: new MongooseAdapter(process.env.MONGO_URI_FE, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        keepAlive: true,
-    }),
+	adapter: new MongooseAdapter(process.env.MONGO_URI_FE, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		keepAlive: true,
+	}),
 
-    model: MiniProgramUserModel,
+	model: MiniProgramUserModel,
 
-    /**
-     * Settings
-     */
-    settings: {
-    },
+	/**
+	 * Settings
+	 */
+	settings: {},
 
-    /**
-     * Dependencies
-     */
-    dependencies: [],
+	/**
+	 * Dependencies
+	 */
+	dependencies: [],
 
-    /**
-     * Actions
-     */
-    actions: MongooseAction(),
+	/**
+	 * Actions
+	 */
+	actions: MongooseAction(),
 
-    /**
-     * Events
-     */
-    events: {
+	/**
+	 * Events
+	 */
+	events: {},
 
-    },
+	/**
+	 * Methods
+	 */
+	methods: {},
 
-    /**
-     * Methods
-     */
-    methods: {},
+	/**
+	 * Service created lifecycle event handler
+	 */
+	created() {},
 
-    /**
-     * Service created lifecycle event handler
-     */
-    created() {
+	/**
+	 * Service started lifecycle event handler
+	 */
+	async started() {},
 
-    },
+	/**
+	 * Service stopped lifecycle event handler
+	 */
 
-    /**
-     * Service started lifecycle event handler
-     */
-    async started() { },
+	// async stopped() {},
 
-    /**
-     * Service stopped lifecycle event handler
-     */
-
-    // async stopped() {},
-
-    async afterConnected() {
-        this.logger.info('Connected successfully User...');
-    },
+	async afterConnected() {
+		this.logger.info("Connected successfully User...");
+	},
 };

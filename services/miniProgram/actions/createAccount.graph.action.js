@@ -15,6 +15,12 @@ module.exports = async function (ctx) {
 			avatar: payload.avatar,
 		};
 
+		if (!_.isNil(_.get(payload, "isAdmin", null))) {
+			if (payload.isAdmin) {
+				obj.scope = ["admin.view.stat"];
+			}
+		}
+
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
 			[{ $or: [{ email: obj.email }, { phone: obj.phone }] }]

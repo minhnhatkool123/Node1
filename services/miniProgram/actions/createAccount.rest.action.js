@@ -7,13 +7,19 @@ module.exports = async function (ctx) {
 	try {
 		const payload = ctx.params.body;
 		const obj = {
-			name: payload.fullName,
+			name: payload.name,
 			phone: payload.phone,
 			email: payload.email,
 			password: payload.password,
 			gender: payload.gender,
 			avatar: payload.avatar,
 		};
+
+		if (!_.isNil(_.get(payload, "isAdmin", null))) {
+			if (payload.isAdmin) {
+				obj.scope = ["admin.view.stat"];
+			}
+		}
 
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
@@ -34,13 +40,6 @@ module.exports = async function (ctx) {
 				message: "Thất bại trung sđt",
 			};
 		}
-
-		// if (userInfo.phone === obj.phone) {
-		// 	return {
-		// 		code: 1001,
-		// 		message: "Thất bại trùng sđt",
-		// 	};
-		// }
 
 		const hashPassword = await bcrypt.hash(obj.password, 10);
 		obj.password = hashPassword;

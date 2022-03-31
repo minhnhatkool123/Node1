@@ -1,30 +1,31 @@
 const gql = require("moleculer-apollo-server").moleculerGql;
 
 module.exports = gql`
-	input LoginInfo {
+	input LoginInput {
 		email: String!
 		password: String!
 	}
 
-	input LogoutInfo {
+	input LogoutInput {
 		id: Int!
 	}
 
-	input SendOtpEmailInfo {
+	input SendOtpEmailInput {
 		email: String!
 	}
 
-	input ResetPasswordInfo {
+	input ResetPasswordInput {
 		email: String!
 		otp: String!
 	}
 
-	input NewUser {
+	input NewUserInput {
 		name: String!
 		phone: String!
 		email: String!
 		password: String!
 		gender: UserGender!
 		avatar: String!
+		isAdmin: Boolean
 	}
 `;
