@@ -45,57 +45,19 @@ module.exports = {
 	 */
 	actions: {
 		createAccount: {
-			params: {
-				input: {
-					$$type: "object",
-					name: "string",
-					phone: "string",
-					email: { type: "email" },
-					password: "string",
-					gender: "string",
-					avatar: "string",
-					isAdmin: "boolean|optional",
-				},
-			},
-			handler: require("./actions/createAccount.graph.action"),
+			handler: require("./actions/createAccount.action"),
 		},
 		login: {
-			params: {
-				input: {
-					$$type: "object",
-					email: "string",
-					password: "string",
-				},
-			},
-			handler: require("./actions/login.graph.action"),
+			handler: require("./actions/login.action"),
 		},
 		logout: {
-			params: {
-				input: {
-					$$type: "object",
-					id: "number",
-				},
-			},
-			handler: require("./actions/logout.graph.action"),
+			handler: require("./actions/logout.action"),
 		},
 		sendOtpEmail: {
-			params: {
-				input: {
-					$$type: "object",
-					email: { type: "email" },
-				},
-			},
-			handler: require("./actions/sendOtpEmail.graph.action"),
+			handler: require("./actions/sendOtpEmail.action"),
 		},
 		resetPassword: {
-			params: {
-				input: {
-					$$type: "object",
-					otp: "string",
-					email: { type: "email" },
-				},
-			},
-			handler: require("./actions/resetPassword.graph.action"),
+			handler: require("./actions/resetPassword.action"),
 		},
 		graphqlUser: {
 			graphql: {

@@ -5,7 +5,9 @@ const emailHelper = require("../../helpers/email.helper");
 
 module.exports = async function (ctx) {
 	try {
-		const payload = ctx.params.body;
+		const payload = ctx.service.name.includes(".graph")
+			? ctx.params.input
+			: ctx.params.body;
 		const obj = {
 			email: payload.email,
 		};

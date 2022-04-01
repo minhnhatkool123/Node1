@@ -5,7 +5,9 @@ const bcrypt = require("bcrypt");
 
 module.exports = async function (ctx) {
 	try {
-		const payload = ctx.params.input;
+		const payload = ctx.service.name.includes(".graph")
+			? ctx.params.input
+			: ctx.params.body;
 		const obj = {
 			name: payload.name,
 			phone: payload.phone,

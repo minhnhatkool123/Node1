@@ -19,7 +19,9 @@ module.exports = async function (ctx) {
 			};
 		}
 
-		const payload = ctx.params.body;
+		const payload = ctx.service.name.includes(".graph")
+			? ctx.params.input
+			: ctx.params.body;
 		const obj = {
 			id: payload.id,
 		};

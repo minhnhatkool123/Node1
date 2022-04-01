@@ -37,7 +37,7 @@ module.exports = {
 				},
 			},
 
-			handler: require("./actions/logout.rest.action"),
+			handler: require("./actions/logout.action"),
 		},
 		resetPassword: {
 			rest: {
@@ -82,7 +82,7 @@ module.exports = {
 					password: "string",
 				},
 			},
-			handler: require("./actions/login.rest.action"),
+			handler: require("./actions/login.action"),
 		},
 		createAccount: {
 			rest: {
@@ -102,7 +102,7 @@ module.exports = {
 					isAdmin: "boolean|optional",
 				},
 			},
-			handler: require("./actions/createAccount.rest.action"),
+			handler: require("./actions/createAccount.action"),
 		},
 	},
 

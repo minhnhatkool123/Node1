@@ -7,7 +7,9 @@ const Moment = require("moment");
 
 module.exports = async function (ctx) {
 	try {
-		const { email, password } = ctx.params.body;
+		const { email, password } = ctx.service.name.includes(".graph")
+			? ctx.params.input
+			: ctx.params.body;
 
 		let userInfo = await this.broker.call(
 			"v1.MiniProgramUserModel.findOne",
